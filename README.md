@@ -49,7 +49,7 @@ npm run build
 ### Quick Start with Automated Script (Recommended)
 
 ```bash
-./start-chatgpt-app.sh
+./scripts/start.sh
 ```
 
 This script will:
@@ -60,7 +60,7 @@ This script will:
 
 Then follow the on-screen instructions to configure ChatGPT!
 
-**To stop:** Press `Ctrl+C` or run `./stop-chatgpt-app.sh`
+**To stop:** Press `Ctrl+C` or run `./scripts/stop.sh`
 
 ### Manual Setup (Alternative)
 
@@ -88,11 +88,15 @@ Then follow the on-screen instructions to configure ChatGPT!
 
 ```
 chatgpt_apps_playground/
-├── main.ts                   # Server entry point (HTTP + STDIO)
-├── server.ts                 # Tool & resource registration
-├── echo-widget.html          # UI entry point
-├── src/
+├── server/
+│   ├── main.ts               # Server entry point (HTTP + STDIO)
+│   └── server.ts             # Tool & resource registration
+├── widget/
+│   ├── echo-widget.html      # UI entry point
 │   └── echo-widget.ts        # UI logic with MCP bridge
+├── scripts/
+│   ├── start.sh              # Automated startup script
+│   └── stop.sh               # Cleanup script
 ├── vite.config.ts            # Single-file HTML bundler
 ├── tsconfig.json             # TypeScript base config
 ├── tsconfig.server.json      # Server compilation config

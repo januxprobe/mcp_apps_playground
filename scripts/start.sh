@@ -130,7 +130,7 @@ echo ""
 cleanup() {
     echo ""
     echo "🛑 Stopping services..."
-    ./stop-chatgpt-app.sh
+    ./scripts/stop.sh
     exit 0
 }
 

@@ -4,8 +4,8 @@
 This is a learning project demonstrating the MCP Apps architecture for ChatGPT. It implements a simple "echo" tool that takes text input and displays it in an interactive UI widget.
 
 ## Architecture
-- **MCP Server** (main.ts, server.ts): Exposes `/mcp` endpoint, registers tools and resources
-- **UI Component** (echo-widget.html, src/echo-widget.ts): Runs in iframe, communicates via JSON-RPC
+- **MCP Server** (server/main.ts, server/server.ts): Exposes `/mcp` endpoint, registers tools and resources
+- **UI Component** (widget/echo-widget.html, widget/echo-widget.ts): Runs in iframe, communicates via JSON-RPC
 - **Tool Flow**: ChatGPT → MCP Server → UI rendering
 
 ## Tech Stack
@@ -41,9 +41,11 @@ ngrok http 3001      # Terminal 2: Create tunnel
 ```
 
 ## Key Files
-- `server.ts`: Tool registration, handlers, resource serving
-- `main.ts`: HTTP/STDIO transport setup
-- `src/echo-widget.ts`: UI bridge logic with App class
+- `server/server.ts`: Tool registration, handlers, resource serving
+- `server/main.ts`: HTTP/STDIO transport setup
+- `widget/echo-widget.ts`: UI bridge logic with App class
+- `scripts/start.sh`: Automated startup script with ngrok
+- `scripts/stop.sh`: Cleanup script
 - `vite.config.ts`: Single-file HTML bundling config
 
 ## MCP Apps Patterns
@@ -107,8 +109,10 @@ nvm use                    # Switch to project Node version
 npm run build              # Full build (TypeScript + Vite)
 npm start                  # Dev mode with watch
 npm run inspector          # Test with MCP Inspector
-npx @modelcontextprotocol/inspector node dist/main.js --stdio  # Full inspector command
-ngrok http 3001            # Expose local server
+./scripts/start.sh         # Automated startup with ngrok
+./scripts/stop.sh          # Stop all services
+npx @modelcontextprotocol/inspector node dist/server/main.js --stdio  # Full inspector command
+ngrok http 3001            # Expose local server (manual)
 ```
 
 ## Resources

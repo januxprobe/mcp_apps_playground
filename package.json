@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --noEmit && tsc -p tsconfig.server.json && cross-env INPUT=echo-widget.html vite build",
-    "start": "concurrently 'cross-env NODE_ENV=development INPUT=echo-widget.html vite build --watch' 'tsx watch main.ts'",
-    "inspector": "npx @modelcontextprotocol/inspector node dist/main.js --stdio"
+    "build": "tsc --noEmit && tsc -p tsconfig.server.json && cross-env INPUT=widget/echo-widget.html vite build",
+    "start": "concurrently 'cross-env NODE_ENV=development INPUT=widget/echo-widget.html vite build --watch' 'tsx watch server/main.ts'",
+    "inspector": "npx @modelcontextprotocol/inspector node dist/server/main.js --stdio"
   },
   "repository": {
     "type": "git",
