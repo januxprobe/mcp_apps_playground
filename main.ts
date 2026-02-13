@@ -71,7 +71,9 @@ export async function startStreamableHTTPServer(
 export async function startStdioServer(
   createServerFn: () => McpServer
 ): Promise<void> {
-  console.log("🔍 Starting MCP server in STDIO mode (for MCP Inspector)");
+  // Note: In STDIO mode, stdout is used for JSON-RPC communication
+  // All logging must go to stderr
+  console.error("🔍 Starting MCP server in STDIO mode (for MCP Inspector)");
   await createServerFn().connect(new StdioServerTransport());
 }
 

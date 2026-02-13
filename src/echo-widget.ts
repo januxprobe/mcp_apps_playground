@@ -122,5 +122,5 @@ echoAgainBtn.addEventListener("click", async () => {
 
 // Connect to MCP host (ChatGPT)
 app.connect();
-console.log("🚀 Echo widget initialized and connected to MCP host");
-console.log("📋 Waiting for tool results...");
+console.error("🚀 Echo widget initialized and connected to MCP host");
+console.error("📋 Waiting for tool results...");

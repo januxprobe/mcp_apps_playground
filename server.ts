@@ -52,7 +52,7 @@ export function createServer(): McpServer {
       // Handler receives validated args from Zod schema
       const { text } = args;
 
-      console.log(`Echo tool called with text: "${text}"`);
+      console.error(`Echo tool called with text: "${text}"`);
 
       return {
         // Structured data for both model and UI consumption
@@ -84,7 +84,7 @@ export function createServer(): McpServer {
     resourceUri,    // Must match the tool's resourceUri
     { mimeType: RESOURCE_MIME_TYPE },  // text/html;profile=mcp-app
     async () => {
-      console.log(`Serving UI resource from: ${DIST_DIR}/echo-widget.html`);
+      console.error(`Serving UI resource from: ${DIST_DIR}/echo-widget.html`);
 
       // Read the bundled HTML from dist directory
       const html = await fs.readFile(
@@ -104,7 +104,7 @@ export function createServer(): McpServer {
     }
   );
 
-  console.log("Echo MCP server created with 1 tool and 1 resource");
+  console.error("Echo MCP server created with 1 tool and 1 resource");
 
   return server;
 }
