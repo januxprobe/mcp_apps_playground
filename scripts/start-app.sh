@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ChatGPT App Startup Script (Multi-App)
+# MCP App Startup Script (Multi-App)
 # This script builds and starts any app with ngrok for ChatGPT integration
 
 set -e  # Exit on error
@@ -23,7 +23,7 @@ if [ ! -d "apps/$APP_NAME" ]; then
   exit 1
 fi
 
-echo "🚀 Starting $APP_NAME ChatGPT App..."
+echo "🚀 Starting $APP_NAME MCP App..."
 echo ""
 
 # Colors for output
@@ -107,7 +107,7 @@ echo ""
 
 # Display setup instructions
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo -e "${GREEN}🎉 $APP_NAME ChatGPT App is ready!${NC}"
+echo -e "${GREEN}🎉 $APP_NAME MCP App is ready!${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo -e "${BLUE}📋 ChatGPT Configuration:${NC}"

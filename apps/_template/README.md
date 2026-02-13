@@ -1,6 +1,6 @@
-# ChatGPT App Template
+# MCP App Template
 
-This template helps you quickly create a new ChatGPT app in the playground.
+This template helps you quickly create a new MCP app in the playground that works on both ChatGPT and Claude Desktop.
 
 ## Using This Template
 
@@ -29,7 +29,7 @@ This script will:
 | `{{APP_NAME}}` | Human-readable app name | `Weather App` |
 | `{{TOOL_NAME}}` | First tool name (snake_case) | `get_weather` |
 | `{{TOOL_TITLE}}` | Tool display title | `Get Weather` |
-| `{{TOOL_DESCRIPTION}}` | Tool description for ChatGPT | `Gets current weather for a location` |
+| `{{TOOL_DESCRIPTION}}` | Tool description for AI model | `Gets current weather for a location` |
 
 ## Next Steps
 
@@ -70,9 +70,10 @@ After creating from template:
 
 - Start simple - one tool, basic UI
 - Look at `echo` and `calculator` apps for examples
-- Use console.error() for logging (stdout reserved for JSON-RPC)
-- Test with MCP Inspector before deploying to ChatGPT
+- Use console.error() for logging (stdout reserved for JSON-RPC in STDIO mode)
+- Test with MCP Inspector or either platform before deploying
 - Version your resourceUri when making breaking changes
+- Apps automatically work on both ChatGPT and Claude Desktop
 
 ## Resources
 

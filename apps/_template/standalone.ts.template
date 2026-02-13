@@ -3,11 +3,11 @@ import { createServer } from "./server.js";
 
 /**
  * Standalone entry point for this app
- * Can run in HTTP mode (for ChatGPT) or STDIO mode (for MCP Inspector)
+ * Can run in HTTP mode (for ChatGPT) or STDIO mode (for Claude Desktop/MCP Inspector)
  */
 async function main() {
   if (process.argv.includes("--stdio")) {
-    // STDIO mode for MCP Inspector
+    // STDIO mode for Claude Desktop and MCP Inspector
     await startStdioServer(createServer);
   } else {
     // HTTP mode for ChatGPT

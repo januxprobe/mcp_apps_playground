@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 const DIST_DIR = path.join(__dirname, "..", "..", "dist", "calculator");
 
 // Export constants for multi-app integration
-export const APP_NAME = "Calculator ChatGPT App";
+export const APP_NAME = "Calculator MCP App";
 export const APP_VERSION = "1.0.0";
 
 /**

@@ -1,7 +1,7 @@
-# ChatGPT Apps Playground - Claude Instructions
+# MCP Apps Playground - Claude Instructions
 
 ## Project Overview
-This is a multi-app learning playground demonstrating the MCP Apps architecture for ChatGPT. It allows you to build, test, and run **multiple independent ChatGPT apps** from a single repository, making it easy to experiment with different tools and UI patterns.
+This is a multi-app learning playground demonstrating the MCP Apps architecture. It allows you to build, test, and run **multiple independent MCP apps** from a single repository on both **ChatGPT** and **Claude Desktop**, making it easy to experiment with different tools and UI patterns.
 
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts
@@ -14,8 +14,8 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture 
 **Infrastructure is generic, apps are self-contained.**
 
 ```
-chatgpt_apps_playground/
-├── apps/                    # Self-contained ChatGPT apps
+mcp-apps-playground/
+├── apps/                    # Self-contained MCP apps
 │   ├── echo/               # Echo app
 │   ├── calculator/         # Calculator app
 │   └── _template/          # Template for new apps
@@ -63,6 +63,219 @@ The infrastructure is **generic and reusable**:
 - **UI Bundler**: Vite with vite-plugin-singlefile
 - **Transport**: StreamableHTTPServerTransport (HTTP) + StdioServerTransport (local testing)
 - **Validation**: Zod for tool input schemas
+
+## Platform Support: ChatGPT and Claude Desktop
+
+This project uses the **MCP Apps unified standard**, which works on both ChatGPT and Claude Desktop without code changes. The same apps run on both platforms using different transport mechanisms.
+
+### Unified Standard Benefits
+
+**Key insight:** MCP Apps are platform-agnostic. The `@modelcontextprotocol/ext-apps` SDK officially supports both platforms.
+
+✅ **Same codebase** - No platform-specific code needed
+✅ **Same tools** - Tool definitions work identically
+✅ **Same widgets** - UI components render on both platforms
+✅ **Same responses** - `structuredContent` / `content` / `_meta` pattern is universal
+
+### Transport Selection
+
+The infrastructure automatically selects the right transport based on launch mode:
+
+**ChatGPT (HTTP Mode):**
+```typescript
+// Default: HTTP transport via ngrok
+await startStreamableHTTPServer(createServer);
+```
+- Remote access via public URL
+- Express server on port 3001
+- CORS enabled for cross-origin requests
+- Development hot reload support
+
+**Claude Desktop (STDIO Mode):**
+```typescript
+// With --stdio flag: Local subprocess
+await startStdioServer(createServer);
+```
+- Local process communication
+- JSON-RPC over stdin/stdout
+- No network required
+- Near-instant performance
+
+**Implementation in `standalone.ts`:**
+```typescript
+async function main() {
+  if (process.argv.includes("--stdio")) {
+    await startStdioServer(createServer);  // Claude Desktop
+  } else {
+    await startStreamableHTTPServer(createServer);  // ChatGPT
+  }
+}
+```
+
+This pattern is already implemented in all apps - no changes needed!
+
+### Platform-Specific Configuration
+
+**ChatGPT Setup:**
+```bash
+# Start with ngrok tunnel
+./scripts/start-app.sh echo
+
+# Configure connector in ChatGPT Settings → Connectors
+# URL: https://xxx.ngrok.io/mcp
+```
+
+**Claude Desktop Setup:**
+```bash
+# Configure local MCP servers
+./scripts/claude-desktop-config.sh
+
+# Restart Claude Desktop
+# Apps appear in Connectors panel
+```
+
+**Claude Desktop Config Location:**
+`~/Library/Application Support/Claude/claude_desktop_config.json`
+
+**Example config entry:**
+```json
+{
+  "mcpServers": {
+    "echo": {
+      "command": "npx",
+      "args": ["-y", "tsx", "/path/to/apps/echo/standalone.ts", "--stdio"]
+    }
+  }
+}
+```
+
+### Development Workflow by Platform
+
+**ChatGPT Development:**
+```bash
+# Hot reload during development
+npm run start:echo
+
+# Full startup with ngrok
+./scripts/start-app.sh echo
+
+# Test with MCP Inspector
+npm run inspector:echo
+```
+
+**Claude Desktop Development:**
+```bash
+# Build the app
+npm run build:echo
+
+# Update configuration
+./scripts/claude-desktop-config.sh
+
+# Restart Claude Desktop to pick up changes
+```
+
+**Important:** Claude Desktop requires full rebuild + restart cycle. ChatGPT supports hot reload.
+
+### Logging Best Practices
+
+**Critical for STDIO mode (Claude Desktop):**
+
+In STDIO transport, `stdout` is reserved for JSON-RPC messages. All logging MUST use `stderr`.
+
+✅ **Correct:**
+```typescript
+console.error("Tool called with:", args);  // Uses stderr
+console.error("Server started");          // Uses stderr
+```
+
+❌ **Wrong:**
+```typescript
+console.log("Tool called with:", args);   // Breaks STDIO protocol!
+```
+
+**All apps in this project already follow this pattern.** Check `infrastructure/server/main.ts` - all logging uses `console.error()`.
+
+### Cross-Platform Testing
+
+**Test on both platforms:**
+```bash
+# 1. ChatGPT (HTTP mode)
+./scripts/start-app.sh echo
+# Test in ChatGPT conversation
+
+# 2. Claude Desktop (STDIO mode)
+./scripts/claude-desktop-config.sh
+# Restart Claude Desktop, test in conversation
+
+# 3. Verify consistency
+./scripts/verify-claude-desktop.sh
+```
+
+**Expected behavior:**
+- Same tool availability on both platforms
+- Same widget appearance and functionality
+- Same interactive features (buttons, etc.)
+- Same error handling
+
+### Platform-Specific Debugging
+
+**ChatGPT:**
+```bash
+# Server logs
+tail -f server.log
+
+# ngrok traffic
+curl http://localhost:4040/inspect/http
+
+# Network inspector
+# Check browser DevTools Network tab
+```
+
+**Claude Desktop:**
+```bash
+# Verify configuration
+jq . ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# Test STDIO mode manually
+npm run inspector:echo
+
+# Check app responds
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{...}}' | \
+  npx -y tsx apps/echo/standalone.ts --stdio
+```
+
+### Performance Characteristics
+
+| Metric | ChatGPT (HTTP) | Claude Desktop (STDIO) |
+|--------|----------------|------------------------|
+| Latency | ~100-500ms (network) | <10ms (local IPC) |
+| Reliability | Depends on ngrok/network | Very high (local) |
+| Development | Hot reload ✅ | Rebuild required |
+| Debugging | Server logs + network | stderr logs only |
+| Security | Tunneled (ngrok auth) | Fully local |
+
+### Common Issues by Platform
+
+**ChatGPT Issues:**
+- Port 3001 in use → `./scripts/stop.sh`
+- ngrok tunnel expired → Restart script
+- CORS errors → Check Express middleware
+- Widget not updating → Rebuild + refresh connector
+
+**Claude Desktop Issues:**
+- App not appearing → Check config JSON syntax
+- Tool executes but no widget → Verify build artifacts
+- Connection failed → Check `tsx` availability
+- Logs not showing → Using `console.log` instead of `console.error`
+
+**Resolution:**
+```bash
+# ChatGPT: Restart services
+./scripts/stop.sh && ./scripts/start-app.sh echo
+
+# Claude Desktop: Rebuild and verify
+npm run build:echo && ./scripts/verify-claude-desktop.sh
+```
 
 ## Development Workflow
 
@@ -384,4 +597,4 @@ tail -f /tmp/{app}-start.log        # View startup logs
 - [MCP Inspector Tool](https://modelcontextprotocol.io/docs/tools/inspector)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Developer Mode Guide](https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt-beta)
-- [Repository](https://github.com/januxprobe/chatgpt_apps_playground)
+- [Repository](https://github.com/januxprobe/mcp-apps-playground)

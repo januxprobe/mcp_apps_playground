@@ -65,14 +65,14 @@ export async function startStreamableHTTPServer(
 }
 
 /**
- * Starts the MCP server with STDIO transport for local testing (MCP Inspector)
+ * Starts the MCP server with STDIO transport for local access (Claude Desktop, MCP Inspector)
  */
 export async function startStdioServer(
   createServerFn: () => McpServer
 ): Promise<void> {
   // Note: In STDIO mode, stdout is used for JSON-RPC communication
   // All logging must go to stderr
-  console.error("🔍 Starting MCP server in STDIO mode (for MCP Inspector)");
+  console.error("🔍 Starting MCP server in STDIO mode (for Claude Desktop/MCP Inspector)");
   await createServerFn().connect(new StdioServerTransport());
 }
 

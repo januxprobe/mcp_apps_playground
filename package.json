@@ -1,7 +1,7 @@
 {
-  "name": "chatgpt_apps_playground",
+  "name": "mcp-apps-playground",
   "version": "1.0.0",
-  "description": "",
+  "description": "Multi-app MCP Apps playground - build apps that work on ChatGPT and Claude Desktop",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,16 +17,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/januxprobe/chatgpt_apps_playground.git"
+    "url": "git+https://github.com/januxprobe/mcp-apps-playground.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/januxprobe/chatgpt_apps_playground/issues"
+    "url": "https://github.com/januxprobe/mcp-apps-playground/issues"
   },
-  "homepage": "https://github.com/januxprobe/chatgpt_apps_playground#readme",
+  "homepage": "https://github.com/januxprobe/mcp-apps-playground#readme",
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.0.1",
     "@modelcontextprotocol/sdk": "^1.26.0",

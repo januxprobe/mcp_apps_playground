@@ -10,7 +10,7 @@ import type { AppServerModule } from "./types.js";
  */
 export function createMultiAppServer(apps: AppServerModule[]): McpServer {
   const server = new McpServer({
-    name: "ChatGPT Apps Playground",
+    name: "MCP Apps Playground",
     version: "1.0.0",
   });
 
