@@ -44,13 +44,27 @@ function showError(message: string) {
  */
 function updateUI(result: any) {
   try {
+    // Debug: log what we're receiving
+    console.error("📦 Result keys:", Object.keys(result));
+    console.error("📊 structuredContent:", result.structuredContent);
+    console.error("📊 structuredContent keys:", result.structuredContent ? Object.keys(result.structuredContent) : "undefined");
+    console.error("🔍 _meta:", result._meta);
+
     // Extract data from structured content
     const echoedText = result.structuredContent?.echoedText;
     const timestamp = result.structuredContent?.timestamp;
 
-    // Extract metadata (only available to UI, not model)
-    const characterCount = result._meta?.characterCount ?? 0;
-    const wordCount = result._meta?.wordCount ?? 0;
+    // Try multiple paths for the counts
+    const charFromMeta = result._meta?.characterCount;
+    const charFromStructured = result.structuredContent?.characterCount;
+    const wordFromMeta = result._meta?.wordCount;
+    const wordFromStructured = result.structuredContent?.wordCount;
+
+    console.error("🔢 charFromMeta:", charFromMeta, "charFromStructured:", charFromStructured);
+    console.error("🔢 wordFromMeta:", wordFromMeta, "wordFromStructured:", wordFromStructured);
+
+    const characterCount = charFromMeta ?? charFromStructured ?? 0;
+    const wordCount = wordFromMeta ?? wordFromStructured ?? 0;
 
     if (echoedText) {
       currentText = echoedText;

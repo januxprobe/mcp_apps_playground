@@ -24,8 +24,8 @@ export function createServer(): McpServer {
     version: "1.0.0",
   });
 
-  // Define UI resource URI (acts as cache key)
-  const resourceUri = "ui://echo/widget.html";
+  // Define UI resource URI (acts as cache key - change version to force refresh)
+  const resourceUri = "ui://echo/widget-v3.html";
 
   // Register the echo tool
   registerAppTool(
@@ -60,6 +60,8 @@ export function createServer(): McpServer {
           originalText: text,
           echoedText: text,
           timestamp: new Date().toISOString(),
+          characterCount: text.length,
+          wordCount: text.split(/\s+/).filter(Boolean).length,
         },
         // Optional narrative for the model's response
         content: [

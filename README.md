@@ -46,7 +46,23 @@ npm install
 npm run build
 ```
 
-### Testing with ChatGPT (Recommended)
+### Quick Start with Automated Script (Recommended)
+
+```bash
+./start-chatgpt-app.sh
+```
+
+This script will:
+- ✅ Build the project
+- ✅ Start the MCP server on port 3001
+- ✅ Start ngrok tunnel automatically
+- ✅ Display the ChatGPT configuration URL
+
+Then follow the on-screen instructions to configure ChatGPT!
+
+**To stop:** Press `Ctrl+C` or run `./stop-chatgpt-app.sh`
+
+### Manual Setup (Alternative)
 
 1. **Start the server:**
    ```bash
