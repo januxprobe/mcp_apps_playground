@@ -5,6 +5,11 @@
 
 set -e  # Exit on error
 
+# Change to project root directory (parent of scripts/)
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+cd "$PROJECT_ROOT"
+
 echo "🚀 Starting Echo ChatGPT App..."
 echo ""
 
@@ -14,9 +19,9 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Check if running from correct directory
+# Verify we're in the project root
 if [ ! -f "package.json" ]; then
-    echo "❌ Error: Must run from project root directory"
+    echo "❌ Error: Could not find project root directory"
     exit 1
 fi
 

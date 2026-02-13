@@ -3,6 +3,11 @@
 # Echo ChatGPT App Stop Script
 # This script stops all services (MCP server, ngrok)
 
+# Change to project root directory (parent of scripts/)
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+cd "$PROJECT_ROOT"
+
 echo "🛑 Stopping Echo ChatGPT App..."
 
 # Kill server on port 3001
@@ -21,4 +26,4 @@ sleep 2
 
 echo "✅ All services stopped"
 echo ""
-echo "Run ./start-chatgpt-app.sh to start again"
+echo "Run ./scripts/start.sh to start again"
