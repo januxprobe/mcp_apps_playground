@@ -1,14 +1,25 @@
-# Echo ChatGPT App
+# ChatGPT Apps Playground
 
-A learning project demonstrating the MCP (Model Context Protocol) Apps architecture for ChatGPT. This app implements a simple "echo" tool that takes text input and displays it in an interactive UI widget within ChatGPT.
+A multi-app playground for learning and experimenting with ChatGPT MCP Apps. Build, test, and deploy multiple interactive ChatGPT apps from one repository.
+
+## 🎮 What's This?
+
+This is a learning playground that demonstrates the MCP (Model Context Protocol) Apps architecture for ChatGPT. Instead of just one app, you can build and run **multiple apps** independently or together, making it easy to experiment with different tools and UI patterns.
+
+**Currently includes:**
+- 🔊 **Echo App** - Text echo with character/word counts (purple gradient UI)
+- 🧮 **Calculator App** - Arithmetic operations: add, subtract, multiply, divide (blue/green gradient UI)
+- 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 
 ## 🎯 Purpose
 
-Learn how to build ChatGPT apps using the modern MCP Apps SDK (January 2026), understanding:
+Learn how to build ChatGPT apps using the modern MCP Apps SDK (January 2026):
+- Multi-app architecture with shared infrastructure
 - MCP server implementation with tool registration
 - UI components in iframes communicating via JSON-RPC
 - Three-part response architecture (structuredContent, content, _meta)
 - Single-file HTML bundling for simplified deployment
+- App scaffolding and automation
 
 ## 🏗️ Architecture
 
@@ -20,17 +31,18 @@ ChatGPT ←→ MCP Server ←→ UI Component
             (postMessage)
 ```
 
-**Components:**
-1. **MCP Server** (`main.ts`, `server.ts`) - Exposes tools via `/mcp` endpoint
-2. **UI Widget** (`echo-widget.html`, `src/echo-widget.ts`) - Interactive interface in ChatGPT
-3. **ChatGPT Model** - Orchestrates tool calls based on user prompts
+**Key Components:**
+- **Apps** - Self-contained ChatGPT apps (echo, calculator, etc.)
+- **Infrastructure** - Shared, reusable MCP server code
+- **Scripts** - Automation for building, running, and creating apps
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ (project uses v24.8.0)
+- Node.js 18+ (project uses v24.8.0, locked via `.nvmrc`)
 - npm 7+
-- ChatGPT Plus/Pro (for testing with Developer Mode)
+- ngrok (install: `brew install ngrok/ngrok/ngrok`)
+- ChatGPT Plus/Pro with Developer Mode enabled
 
 ### Installation
 
@@ -39,141 +51,277 @@ ChatGPT ←→ MCP Server ←→ UI Component
 git clone https://github.com/januxprobe/chatgpt_apps_playground.git
 cd chatgpt_apps_playground
 
+# Use correct Node.js version (if using nvm)
+nvm use
+
 # Install dependencies
 npm install
-
-# Build the project
-npm run build
 ```
 
-### Quick Start with Automated Script (Recommended)
+### Run an App (Recommended)
 
+**Start the calculator app:**
 ```bash
-./scripts/start.sh
+./scripts/start-app.sh calculator
+```
+
+**Or start the echo app:**
+```bash
+./scripts/start-app.sh echo
 ```
 
 This script will:
-- ✅ Build the project
+- ✅ Build the app
 - ✅ Start the MCP server on port 3001
 - ✅ Start ngrok tunnel automatically
 - ✅ Display the ChatGPT configuration URL
 
-Then follow the on-screen instructions to configure ChatGPT!
+**Then:**
+1. Copy the ngrok URL from the output
+2. Open ChatGPT → Settings → Connectors → Create
+3. Enter the details shown in the script output
+4. Start chatting and try the app's tools!
+
+**Example prompts:**
+- Calculator: `"Add 15 and 27"` or `"Divide 100 by 5"`
+- Echo: `"Echo back 'Hello from my playground!'"`
 
 **To stop:** Press `Ctrl+C` or run `./scripts/stop.sh`
 
-### Manual Setup (Alternative)
+## 🎮 Available Apps
 
-1. **Start the server:**
-   ```bash
-   npm start
-   ```
+### 🔊 Echo App
+Simple text echo with metadata display.
 
-2. **Create ngrok tunnel:**
-   ```bash
-   ngrok http 3001
-   ```
+**Tools:**
+- `echo` - Echoes text with character and word counts
 
-3. **Configure ChatGPT:**
-   - Open ChatGPT → Settings → Connectors → Create
-   - Name: "Echo MCP App"
-   - URL: `https://[your-ngrok-id].ngrok.app/mcp`
-   - Enable Developer Mode in Advanced settings
+**Features:**
+- Purple gradient UI
+- Character and word count
+- Timestamp display
+- "Echo Again" interactive button
 
-4. **Test:**
-   - Ask ChatGPT: "Echo back 'Hello from ChatGPT!'"
-   - The widget should render with your text and metadata
+**Start:** `./scripts/start-app.sh echo`
+
+---
+
+### 🧮 Calculator App
+Basic arithmetic operations with interactive UI.
+
+**Tools:**
+- `add` - Add two numbers
+- `subtract` - Subtract two numbers
+- `multiply` - Multiply two numbers
+- `divide` - Divide two numbers (with zero-division handling)
+
+**Features:**
+- Blue/green gradient UI
+- Operation display with equation
+- Interactive buttons for each operation
+- Error handling
+
+**Start:** `./scripts/start-app.sh calculator`
+
+---
+
+## 🛠️ Creating Your Own App
+
+### Quick Method (5 minutes)
+
+```bash
+./scripts/new-app.sh myapp
+```
+
+This will:
+1. Copy the template to `apps/myapp/`
+2. Prompt for app details (name, tool name, etc.)
+3. Replace all placeholders automatically
+4. Add build scripts to `package.json`
+5. Create a working skeleton ready to customize
+
+**Then:**
+1. Edit `apps/myapp/server.ts` - Implement your tool logic
+2. Edit `apps/myapp/widget/myapp-widget.html` - Design your UI
+3. Edit `apps/myapp/widget/myapp-widget.ts` - Add UI logic
+4. Test: `./scripts/start-app.sh myapp`
+
+### Manual Method
+
+See the template documentation: `apps/_template/README.md`
 
 ## 📁 Project Structure
 
 ```
 chatgpt_apps_playground/
-├── server/
-│   ├── main.ts               # Server entry point (HTTP + STDIO)
-│   └── server.ts             # Tool & resource registration
-├── widget/
-│   ├── echo-widget.html      # UI entry point
-│   └── echo-widget.ts        # UI logic with MCP bridge
+├── apps/                           # All applications
+│   ├── echo/
+│   │   ├── server.ts              # Echo MCP server
+│   │   ├── standalone.ts          # Entry point
+│   │   └── widget/
+│   │       ├── echo-widget.html
+│   │       └── echo-widget.ts
+│   ├── calculator/
+│   │   ├── server.ts              # Calculator MCP server
+│   │   ├── standalone.ts
+│   │   └── widget/
+│   │       ├── calculator-widget.html
+│   │       └── calculator-widget.ts
+│   └── _template/                 # Template for new apps
+│       ├── README.md
+│       ├── server.ts.template
+│       ├── standalone.ts.template
+│       └── widget/
+├── infrastructure/                # Shared infrastructure
+│   └── server/
+│       ├── main.ts               # Generic HTTP/STDIO server
+│       ├── types.ts              # TypeScript interfaces
+│       ├── multi-app.ts          # Multi-app server (WIP)
+│       └── multi-app-entry.ts
 ├── scripts/
-│   ├── start.sh              # Automated startup script
-│   └── stop.sh               # Cleanup script
-├── vite.config.ts            # Single-file HTML bundler
-├── tsconfig.json             # TypeScript base config
-├── tsconfig.server.json      # Server compilation config
-└── package.json              # Dependencies and scripts
+│   ├── start-app.sh              # Start any app
+│   ├── new-app.sh                # Create new app
+│   ├── build-app.sh              # Build specific app
+│   ├── start-multi.sh            # Start all apps (WIP)
+│   └── stop.sh                   # Stop all services
+├── dist/                         # Build output
+│   ├── infrastructure/
+│   ├── echo/
+│   └── calculator/
+├── vite.app.config.ts            # Widget build config
+├── tsconfig.json                 # Base TypeScript config
+├── tsconfig.app.json             # App compilation
+├── tsconfig.infrastructure.json  # Infrastructure compilation
+└── package.json                  # Dependencies and scripts
+```
+
+## 🛠️ Development
+
+### Build Commands
+
+```bash
+npm run build                # Build all apps + infrastructure
+npm run build:echo           # Build echo app only
+npm run build:calculator     # Build calculator app only
+npm run build:infrastructure # Build infrastructure only
+```
+
+### Development Mode (with hot reload)
+
+```bash
+npm run start:echo           # Echo app dev mode
+npm run start:calculator     # Calculator app dev mode
+```
+
+### Testing with MCP Inspector
+
+```bash
+npm run inspector:echo       # Test echo with MCP Inspector
+npm run inspector:calculator # Test calculator with MCP Inspector
+```
+
+⚠️ **Note:** MCP Inspector has limited support for MCP Apps with UI components. For full testing, use ChatGPT via ngrok.
+
+### Scripts
+
+```bash
+./scripts/start-app.sh <app>    # Start app with ngrok
+./scripts/build-app.sh <app>    # Build specific app
+./scripts/new-app.sh <app-id>   # Create new app from template
+./scripts/stop.sh               # Stop all services
 ```
 
 ## 🔑 Key Concepts
 
+### Multi-App Architecture
+
+Each app is **self-contained** with its own:
+- `server.ts` - MCP server with tool registration
+- `standalone.ts` - Entry point for running independently
+- `widget/` - UI component (HTML + TypeScript)
+
+Apps share the **infrastructure**:
+- Generic HTTP/STDIO transport (`infrastructure/server/main.ts`)
+- Type definitions (`infrastructure/server/types.ts`)
+- Build system (Vite, TypeScript configs)
+
 ### No Separate Manifest
+
 Modern MCP Apps don't use manifest files. UI links are embedded in tool definitions:
 ```typescript
-_meta: { ui: { resourceUri: "ui://echo/widget.html" } }
+_meta: { ui: { resourceUri: "ui://calculator/widget.html" } }
 ```
 
 ### Three-Part Response
+
 Tool handlers return:
-- `structuredContent` - Data for both model and UI
+- `structuredContent` - Data for **both** model and UI (guaranteed to reach widget)
 - `content` - Optional narrative for the model
-- `_meta` - Sensitive/large data only for UI
+- `_meta` - UI-only data (may not be passed by ChatGPT)
+
+**Important:** Always put critical data in `structuredContent`, not just `_meta`!
 
 ### Single HTML Bundle
-Vite bundles HTML, CSS, and JavaScript into one file for simplified deployment and faster loading.
 
-## 🛠️ Development
-
-### Commands
-
-```bash
-npm run build      # Build server + UI (TypeScript + Vite)
-npm start          # Start dev server with hot reload (port 3001)
-npm run inspector  # Launch MCP Inspector (limited MCP Apps support)
-```
-
-**Note:** For full widget testing, use ChatGPT via ngrok instead of the inspector.
-
-### Testing Flow
-
-**Primary Method: ChatGPT via ngrok**
-1. Start the server: `npm start`
-2. Expose via ngrok: `ngrok http 3001`
-3. Configure ChatGPT connector with ngrok URL
-4. Test end-to-end with the real model
-
-**Alternative: MCP Inspector (Limited Support)**
-
-⚠️ **Note:** The MCP Inspector has limited support for MCP Apps with UI components. It can:
-- ✅ Connect to the server and list tools
-- ✅ Load the widget UI in sandbox
-- ❌ Properly execute tools and send results to widgets
-
-For full testing of the echo widget and interactive features, use ChatGPT via ngrok.
+Vite with `vite-plugin-singlefile` bundles HTML, CSS, and JavaScript into one file for simplified deployment.
 
 ## 🔧 Troubleshooting
 
-### STDIO Mode Logging
-In STDIO mode, `stdout` is reserved for JSON-RPC communication. All logging must use `console.error()` (stderr) instead of `console.log()`. This is already configured correctly in the codebase.
-
-### Browser Extensions
-Browser extensions like Grammarly can interfere with JSON-RPC validation by adding extra properties to messages. Disable extensions when testing the widget in the browser.
-
-### MCP Inspector Issues
-If you encounter "sandbox not loaded" errors or widgets showing "Loading..." indefinitely:
-- This is a known limitation of the MCP Inspector with MCP Apps
-- Use ChatGPT via ngrok for full testing instead
-
 ### Port Already in Use
-If port 3001 is already in use:
+
 ```bash
 lsof -ti:3001 | xargs kill -9
 ```
 
+Or use the stop script:
+```bash
+./scripts/stop.sh
+```
+
+### STDIO Mode Logging
+
+In STDIO mode, `stdout` is reserved for JSON-RPC communication. All logging must use `console.error()` (stderr) instead of `console.log()`.
+
+### Widget Not Updating
+
+After making changes to UI code:
+1. Rebuild: `npm run build:<app-name>`
+2. Restart the server
+3. **Refresh the connector in ChatGPT settings** to pick up changes
+
+### MCP Inspector Issues
+
+If you encounter "sandbox not loaded" errors or widgets showing "Loading..." indefinitely:
+- This is a known limitation of the MCP Inspector with MCP Apps
+- Use ChatGPT via ngrok for full testing instead
+
+### Browser Extensions
+
+Browser extensions like Grammarly can interfere with JSON-RPC validation. Disable extensions when testing widgets in the browser.
+
 ## 📚 Resources
 
 - [MCP Apps Documentation](https://developers.openai.com/apps-sdk/)
+- [MCP Apps Quickstart](https://developers.openai.com/apps-sdk/quickstart/)
+- [Build MCP Server Guide](https://developers.openai.com/apps-sdk/build/mcp-server/)
 - [MCP Inspector Tool](https://modelcontextprotocol.io/docs/tools/inspector)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Developer Mode Guide](https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt-beta)
+
+## 💡 Examples & Inspiration
+
+Looking for ideas for your next app? Try building:
+
+- 🌤️ **Weather App** - Get weather for locations
+- 📝 **Note Taker** - Save and retrieve notes
+- 🎲 **Dice Roller** - RPG dice with custom rules
+- 📊 **Data Visualizer** - Charts from data
+- 🔍 **Search Tool** - Custom search with filters
+- 🎨 **Color Picker** - Color scheme generator
+- 📅 **Calendar Helper** - Date calculations
+- 🔢 **Unit Converter** - Convert between units
+
+Use `./scripts/new-app.sh <app-name>` to get started!
 
 ## 📝 License
 
@@ -181,4 +329,13 @@ MIT
 
 ## 🤝 Contributing
 
-This is a learning project. Feel free to fork and experiment!
+This is a learning project - feel free to fork and experiment! Pull requests welcome.
+
+## 🙏 Acknowledgments
+
+Built with:
+- [MCP SDK](https://github.com/modelcontextprotocol/sdk) - Model Context Protocol
+- [Vite](https://vitejs.dev/) - Fast build tool
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+- [Express](https://expressjs.com/) - HTTP server
+- [Zod](https://zod.dev/) - Schema validation
