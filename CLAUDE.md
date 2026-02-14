@@ -6,7 +6,7 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture.
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts
 - 🧮 **Calculator App** - Arithmetic operations (add, subtract, multiply, divide)
-- 🏥 **Hospi-Copilot** - Multi-step hospitalization journey for insurance declarations
+- 🏥 **Hospi-Copilot** - Production-ready hospitalization journey with dropdowns, date picker, insurance data, validation
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 
 ## Multi-App Architecture
@@ -510,13 +510,22 @@ main().catch((e) => {
 **UI:** Blue/green gradient with operation history
 **Pattern:** Multiple tools, one widget, state management
 
-### Hospi-Copilot (State Machine Example)
-**Purpose:** Multi-step journey with state accumulation for insurance POC
+### Hospi-Copilot (Production-Ready UX Example)
+**Purpose:** Multi-step journey with professional UX for insurance POC
 **Tools:** `hospital_journey` - 7-step hospitalization admission flow
 **UI:** Professional healthcare insurance theme (blue/green)
-**Pattern:** Single tool, state machine, multi-step form journey
+**Pattern:** Single tool, state machine, multi-step form journey with validation
 **Steps:** select_member → select_hospital → admission_details → room_type → review → submitted
-**Features:** Form inputs, state accumulation, demo declaration ID generation (HSP-XXXXXX)
+**Features:**
+- **Hospital dropdown** with 15 Belgian hospitals + custom option
+- **Date picker** with constraints (today to +1 year)
+- **Full insurance demo data**: member number (NISS format), coverage badges (100%/75%), third-party payment details
+- **Progress indicator** showing step count and visual progress bar
+- **Input validation** with error messages
+- **Tooltips** for insurance terminology
+- **Back navigation** with state preservation
+- Demo declaration ID generation (HSP-XXXXXX)
+- Auto-fill patient name from conversational context
 
 ### Template (Scaffolding Base)
 **Purpose:** Starting point for new apps

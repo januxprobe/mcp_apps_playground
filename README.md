@@ -9,7 +9,7 @@ This is a learning playground that demonstrates the MCP (Model Context Protocol)
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts (purple gradient UI)
 - 🧮 **Calculator App** - Arithmetic operations: add, subtract, multiply, divide (blue/green gradient UI)
-- 🏥 **Hospi-Copilot** - Multi-step hospitalization journey for insurance declarations (healthcare UI)
+- 🏥 **Hospi-Copilot** - Production-ready hospitalization journey with dropdowns, date picker, insurance data, validation (healthcare UI)
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 - 🌐 **Dual-Platform** - Same apps work on ChatGPT and Claude Desktop
 
@@ -232,32 +232,43 @@ Basic arithmetic operations with interactive UI.
 
 ### 🏥 Hospi-Copilot
 
-Multi-step hospitalization journey assistant for insurance declarations.
+Production-ready hospitalization journey assistant for insurance declarations with professional UX.
 
 **Tools:**
 - `hospital_journey` - Guide users through a 7-step admission process
 
 **Features:**
 - Professional healthcare insurance UI (blue/green theme)
-- 7-step journey: select member → hospital → admission details → room type → review → submit
+- **Hospital dropdown** - 15 Belgian hospitals with custom option
+- **Date picker** - HTML5 date input with constraints (today to +1 year)
+- **Full insurance demo data** - Member number, coverage details, third-party payment info
+- **Progress indicator** - Visual progress bar showing "Step X of 5"
+- **Input validation** - Real-time validation with error messages
+- **Tooltips** - Explanations for insurance terms
+- **Back navigation** - Navigate backward while preserving state
 - State machine with data accumulation
-- Demo declaration ID generation (HSP-XXXXXX format)
-- Interactive form inputs at each step
-- Summary review before submission
+- Demo data generation:
+  - Declaration ID (HSP-XXXXXX format)
+  - Belgian NISS-style member number
+  - Coverage percentage badges (100% or 75%)
+  - Third-party payment details
+  - Prior authorization flags
+  - Additional notes and instructions
 
-**Steps:**
-1. **Select Member** - Who is being admitted?
-2. **Hospital Selection** - Hospital name, city, abroad status
-3. **Admission Details** - Date, reason, accident checkbox
-4. **Room Type** - Multi-person, single, or day admission
-5. **Review** - Summary of all information
-6. **Submitted** - Declaration ID and confirmation
+**Journey Steps:**
+1. **Select Member** - Patient name (auto-filled from context when possible)
+2. **Hospital Selection** - Dropdown with 15 Belgian hospitals or custom entry
+3. **Admission Details** - Date picker, reason, accident checkbox
+4. **Room Type** - Multi-person (100% coverage), single (75%), or day admission
+5. **Review** - Complete insurance data with coverage badges and payment details
+6. **Submitted** - Declaration ID and full insurance confirmation
 
 **Start:** `./scripts/start-app.sh hospi-copilot`
 
 **Example prompts:**
 - "Start a hospital admission for myself"
-- "I need to declare a hospitalization"
+- "I need to declare a hospitalization at UZ Leuven"
+- "Hospital admission for knee surgery"
 
 ---
 
