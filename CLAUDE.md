@@ -54,9 +54,12 @@ export function createServer(): McpServer { /* ... */ }
 The infrastructure is **generic and reusable**:
 - `main.ts` - Accepts a `createServer()` callback, provides HTTP/STDIO transport
 - `types.ts` - Shared TypeScript interfaces (AppServerModule, AppConfig)
+- `i18n.ts` - Internationalization utilities and best practices for multilingual apps
 - `multi-app.ts` - Multi-app server composer (work in progress)
 
 **Key insight:** `infrastructure/server/main.ts` is completely app-agnostic. It never imports app-specific code.
+
+**Multilingual Support:** The `i18n.ts` module provides reusable types and patterns for building apps in multiple languages. The template includes commented examples, and `hospi-copilot` demonstrates a complete implementation (EN/NL/FR with automatic language detection).
 
 ## Tech Stack
 - **Runtime**: Node.js 18+ (locked via .nvmrc)

@@ -403,7 +403,31 @@ Each app is **self-contained** with its own:
 Apps share the **infrastructure**:
 - Generic HTTP/STDIO transport (`infrastructure/server/main.ts`)
 - Type definitions (`infrastructure/server/types.ts`)
+- Internationalization utilities (`infrastructure/server/i18n.ts`)
 - Build system (Vite, TypeScript configs)
+
+### Multilingual Support
+
+Build apps that automatically adapt to the user's language:
+
+```typescript
+// Server-side: Add language parameter to tool schema
+language: z.enum(["en", "nl", "fr"]).optional().default("en")
+  .describe("Detect from user's prompt language")
+
+// Widget-side: Use translations
+const TRANSLATIONS = {
+  en: { welcome: "Welcome" },
+  nl: { welcome: "Welkom" },
+  fr: { welcome: "Bienvenue" },
+};
+```
+
+**Features:**
+- Automatic language detection by LLM from user's prompt
+- Reusable utilities in `infrastructure/server/i18n.ts`
+- Template includes commented multilingual examples
+- Complete example: `apps/hospi-copilot`
 
 ### No Separate Manifest
 

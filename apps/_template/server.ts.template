@@ -19,6 +19,27 @@ const DIST_DIR = path.join(__dirname, "..", "..", "dist", "{{APP_ID}}");
 export const APP_NAME = "{{APP_NAME}}";
 export const APP_VERSION = "1.0.0";
 
+// OPTIONAL: Multilingual support
+// Uncomment and customize the following for multilingual apps:
+//
+// type Language = 'en' | 'nl' | 'fr';  // Add your supported languages
+//
+// const TRANSLATIONS = {
+//   en: {
+//     toolResponse: "Result processed successfully",
+//     // Add more translations...
+//   },
+//   nl: {
+//     toolResponse: "Resultaat succesvol verwerkt",
+//   },
+//   fr: {
+//     toolResponse: "Résultat traité avec succès",
+//   },
+// };
+//
+// See apps/hospi-copilot for a complete multilingual implementation example.
+// See infrastructure/server/i18n.ts for reusable utilities.
+
 /**
  * Creates and configures the MCP server with tools and UI resource
  */
@@ -45,6 +66,10 @@ export function createServer(): McpServer {
         text: z.string().describe("Example input parameter"),
         // number: z.number().describe("Example number parameter"),
         // optional: z.string().optional().describe("Optional parameter"),
+
+        // OPTIONAL: For multilingual apps, add a language parameter:
+        // language: z.enum(["en", "nl", "fr"]).optional().default("en")
+        //   .describe("UI language: en (English), nl (Dutch), fr (French). Detect from user's prompt language."),
       },
       annotations: {
         readOnlyHint: true,      // Set to false if tool modifies state

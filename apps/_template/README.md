@@ -75,8 +75,35 @@ After creating from template:
 - Version your resourceUri when making breaking changes
 - Apps automatically work on both ChatGPT and Claude Desktop
 
+## Optional: Multilingual Support
+
+The template includes commented examples for building multilingual apps. To enable:
+
+1. **Server-side** (`server.ts`):
+   - Uncomment the `Language` type and `TRANSLATIONS` object
+   - Add language parameter to your tool's `inputSchema`
+   - Use translations in your tool responses
+   - Pass `language` in `structuredContent` to the widget
+
+2. **Widget-side** (`widget.ts`):
+   - Uncomment the `TRANSLATIONS` object and `getT()` function
+   - Extract language from `result.structuredContent`
+   - Call `updateHeader(language)` to translate header
+   - Use translations throughout your UI rendering
+
+3. **See complete example**: `apps/hospi-copilot/`
+
+4. **Reusable utilities**: `infrastructure/server/i18n.ts`
+
+**Best practices:**
+- Let the LLM detect language from user's prompt (no manual selection needed)
+- Add schema description: "Detect from user's prompt language"
+- Translate all UI text: titles, labels, buttons, validation messages
+- Update header dynamically based on language
+
 ## Resources
 
 - [MCP Apps Documentation](https://developers.openai.com/apps-sdk/)
 - [Echo App Example](../echo/)
 - [Calculator App Example](../calculator/)
+- [Hospi-Copilot (Multilingual)](../hospi-copilot/)

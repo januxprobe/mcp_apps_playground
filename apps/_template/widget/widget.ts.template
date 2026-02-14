@@ -6,6 +6,45 @@ const app = new App({
   version: "1.0.0",
 });
 
+// OPTIONAL: Multilingual support
+// Uncomment and customize for multilingual apps:
+//
+// type Language = 'en' | 'nl' | 'fr';
+//
+// const TRANSLATIONS = {
+//   en: {
+//     title: "My App",
+//     subtitle: "App description",
+//     buttonText: "Click me",
+//     // Add more translations...
+//   },
+//   nl: {
+//     title: "Mijn App",
+//     subtitle: "App beschrijving",
+//     buttonText: "Klik mij",
+//   },
+//   fr: {
+//     title: "Mon Application",
+//     subtitle: "Description de l'application",
+//     buttonText: "Cliquez-moi",
+//   },
+// };
+//
+// function getT(language: Language = 'en') {
+//   return TRANSLATIONS[language] || TRANSLATIONS.en;
+// }
+//
+// // Update header with translations
+// function updateHeader(language: Language = 'en') {
+//   const t = getT(language);
+//   const titleEl = document.querySelector("h1");
+//   const subtitleEl = document.querySelector(".subtitle");
+//   if (titleEl) titleEl.textContent = t.title;
+//   if (subtitleEl) subtitleEl.textContent = t.subtitle;
+// }
+//
+// See apps/hospi-copilot for a complete multilingual implementation example.
+
 // DOM elements
 const contentEl = document.getElementById("content") as HTMLElement;
 const statusEl = document.getElementById("status") as HTMLElement;
