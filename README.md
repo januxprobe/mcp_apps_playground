@@ -9,7 +9,7 @@ This is a learning playground that demonstrates the MCP (Model Context Protocol)
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts (purple gradient UI)
 - 🧮 **Calculator App** - Arithmetic operations: add, subtract, multiply, divide (blue/green gradient UI)
-- 🏥 **Hospi-Copilot** - Production-ready hospitalization journey with dropdowns, date picker, insurance data, validation (healthcare UI)
+- 🏥 **Hospi-Copilot** - Production-ready multilingual (EN/NL/FR) hospitalization journey with dropdowns, date picker, insurance data, validation (healthcare UI)
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 - 🌐 **Dual-Platform** - Same apps work on ChatGPT and Claude Desktop
 
@@ -239,6 +239,7 @@ Production-ready hospitalization journey assistant for insurance declarations wi
 
 **Features:**
 - Professional healthcare insurance UI (blue/green theme)
+- **Multilingual support** - Full UI in English, Dutch (Nederlands), or French (Français) with automatic language detection
 - **Hospital dropdown** - 15 Belgian hospitals with custom option
 - **Date picker** - HTML5 date input with constraints (today to +1 year)
 - **Full insurance demo data** - Member number, coverage details, third-party payment info
@@ -265,8 +266,10 @@ Production-ready hospitalization journey assistant for insurance declarations wi
 
 **Start:** `./scripts/start-app.sh hospi-copilot`
 
-**Example prompts:**
-- "Start a hospital admission for myself"
+**Example prompts (in any language):**
+- English: "Start a hospital admission for myself"
+- Dutch: "Start een ziekenhuisopname voor mezelf"
+- French: "Commencer une hospitalisation pour moi-même"
 - "I need to declare a hospitalization at UZ Leuven"
 - "Hospital admission for knee surgery"
 

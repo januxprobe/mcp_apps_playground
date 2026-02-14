@@ -6,7 +6,7 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture.
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts
 - 🧮 **Calculator App** - Arithmetic operations (add, subtract, multiply, divide)
-- 🏥 **Hospi-Copilot** - Production-ready hospitalization journey with dropdowns, date picker, insurance data, validation
+- 🏥 **Hospi-Copilot** - Production-ready multilingual (EN/NL/FR) hospitalization journey with dropdowns, date picker, insurance data, validation
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 
 ## Multi-App Architecture
@@ -517,6 +517,7 @@ main().catch((e) => {
 **Pattern:** Single tool, state machine, multi-step form journey with validation
 **Steps:** select_member → select_hospital → admission_details → room_type → review → submitted
 **Features:**
+- **Multilingual support**: Full UI in English, Dutch (Nederlands), or French (Français) with automatic language detection from user's prompt
 - **Hospital dropdown** with 15 Belgian hospitals + custom option
 - **Date picker** with constraints (today to +1 year)
 - **Full insurance demo data**: member number (NISS format), coverage badges (100%/75%), third-party payment details

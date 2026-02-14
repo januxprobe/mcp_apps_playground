@@ -49,6 +49,10 @@ type HospState = {
 // UI Translations
 const TRANSLATIONS = {
   en: {
+    header: {
+      title: "Hospitalisation & Care Journey",
+      subtitle: "Conversational admission declaration for your insurance",
+    },
     steps: {
       step1: "Step 1: Who is being admitted?",
       step2: "Step 2: Hospital Selection",
@@ -120,6 +124,10 @@ const TRANSLATIONS = {
     },
   },
   nl: {
+    header: {
+      title: "Ziekenhuisopname & Zorgtraject",
+      subtitle: "Conversationele opname-aangifte voor uw verzekering",
+    },
     steps: {
       step1: "Stap 1: Wie wordt opgenomen?",
       step2: "Stap 2: Ziekenhuis Selectie",
@@ -191,6 +199,10 @@ const TRANSLATIONS = {
     },
   },
   fr: {
+    header: {
+      title: "Parcours d'Hospitalisation & Soins",
+      subtitle: "Déclaration d'admission conversationnelle pour votre assurance",
+    },
     steps: {
       step1: "Étape 1 : Qui est admis ?",
       step2: "Étape 2 : Sélection de l'Hôpital",
@@ -409,12 +421,29 @@ function getRoomTypeLabel(roomType: string | undefined, language: Language = 'en
   return "-";
 }
 
+// Update header with language-specific translations
+function updateHeader(language: Language = 'en') {
+  const t = getT(language);
+  const headerTitle = document.querySelector(".hospi-header h2");
+  const headerSubtitle = document.querySelector(".hospi-subtitle");
+
+  if (headerTitle) {
+    headerTitle.textContent = `🏥 ${t.header.title}`;
+  }
+  if (headerSubtitle) {
+    headerSubtitle.textContent = t.header.subtitle;
+  }
+}
+
 // Main render function
 function renderStep(data: HospState) {
   const container = document.getElementById("hospi-step-container");
   if (!container) return;
 
   const { step, state, language = 'en' } = data;
+
+  // Update header with correct language
+  updateHeader(language);
   const t = getT(language);
 
   console.error(`🎨 Rendering step: ${step}, language: ${language}`);

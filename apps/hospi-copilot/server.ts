@@ -216,7 +216,7 @@ export function createServer(): McpServer {
   });
 
   // Define UI resource URI (versioned for cache control)
-  const resourceUri = "ui://hospi-copilot/widget-v5.html";
+  const resourceUri = "ui://hospi-copilot/widget-v6.html";
 
   // Register the hospital_journey tool with state machine
   registerAppTool(
