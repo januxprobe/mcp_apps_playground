@@ -281,15 +281,39 @@ function renderStep(data: HospState) {
       </div>
     `;
 
-    // Toggle custom fields based on selection
+    // Toggle custom fields and location radio buttons based on selection
     const selectEl = document.getElementById("hospitalSelect") as HTMLSelectElement;
     const customFieldsEl = document.getElementById("customHospitalFields");
+    const abroadRadios = document.querySelectorAll('input[name="abroad"]') as NodeListOf<HTMLInputElement>;
+    const belgiumRadio = document.querySelector('input[name="abroad"][value="false"]') as HTMLInputElement;
+
+    // Function to update radio button states
+    const updateLocationRadios = (hospitalId: string) => {
+      if (hospitalId && hospitalId !== "other") {
+        // Belgian hospital selected - disable radios and select Belgium
+        abroadRadios.forEach(radio => {
+          radio.disabled = true;
+          radio.parentElement?.classList.add('hospi-radio-disabled');
+        });
+        if (belgiumRadio) belgiumRadio.checked = true;
+      } else {
+        // Custom or no selection - enable radios
+        abroadRadios.forEach(radio => {
+          radio.disabled = false;
+          radio.parentElement?.classList.remove('hospi-radio-disabled');
+        });
+      }
+    };
+
+    // Initialize state on render
+    updateLocationRadios(selectEl.value);
 
     selectEl?.addEventListener("change", () => {
       const value = selectEl.value;
       if (customFieldsEl) {
         customFieldsEl.style.display = value === "other" || !value ? "block" : "none";
       }
+      updateLocationRadios(value);
     });
 
     document.getElementById("hospitalNext")?.addEventListener("click", () => {

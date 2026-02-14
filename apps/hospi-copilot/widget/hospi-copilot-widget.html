@@ -453,6 +453,23 @@
       .hospi-radio-text {
         font-size: 14px;
       }
+
+      /* Disabled radio button state */
+      .hospi-radio-option.hospi-radio-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #f8f9fa;
+      }
+
+      .hospi-radio-option.hospi-radio-disabled:hover {
+        border-color: #e2e8f0;
+        background: #f8f9fa;
+        transform: none;
+      }
+
+      .hospi-radio-option.hospi-radio-disabled input[type="radio"] {
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body>

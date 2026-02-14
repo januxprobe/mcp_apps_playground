@@ -177,7 +177,7 @@ export function createServer(): McpServer {
   });
 
   // Define UI resource URI (versioned for cache control)
-  const resourceUri = "ui://hospi-copilot/widget-v2.html";
+  const resourceUri = "ui://hospi-copilot/widget-v3.html";
 
   // Register the hospital_journey tool with state machine
   registerAppTool(
@@ -272,11 +272,13 @@ export function createServer(): McpServer {
 
         case "select_hospital": {
           // Auto-populate hospital name/city if hospitalId is provided
-          if (state.hospitalId) {
+          if (state.hospitalId && state.hospitalId !== "other") {
             const hospital = BELGIAN_HOSPITALS.find(h => h.id === state.hospitalId);
             if (hospital) {
               state.hospitalName = hospital.name;
               state.hospitalCity = hospital.city;
+              // Belgian hospital selected - automatically set location to Belgium
+              state.abroad = false;
             }
           }
           nextStep = "admission_details";
