@@ -360,7 +360,10 @@ See template documentation: `apps/_template/README.md`
 ### Infrastructure (Reusable)
 - `infrastructure/server/main.ts` - Generic HTTP/STDIO server
 - `infrastructure/server/types.ts` - Shared TypeScript interfaces
-- `infrastructure/server/i18n.ts` - Internationalization utilities
+- `infrastructure/server/utils/` - Reusable server-side utilities
+  - `i18n.ts` - Internationalization utilities
+  - `csp.ts` - CSP configuration helpers
+  - `pdf-utils.ts` - PDF generation utilities
 - `tsconfig.infrastructure.json` - Infrastructure compilation config
 
 ### Per-App Files

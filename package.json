@@ -4,7 +4,10 @@
   "description": "Multi-app MCP Apps playground - build apps that work on ChatGPT and Claude Desktop",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "build": "npm run build:infrastructure && npm run build:echo && npm run build:calculator && npm run build:hospi-copilot",
     "build:infrastructure": "tsc -p tsconfig.infrastructure.json",
     "build:echo": "tsc -p tsconfig.app.json && cross-env APP=echo vite build --config vite.app.config.ts",
@@ -32,8 +35,10 @@
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.0.1",
     "@modelcontextprotocol/sdk": "^1.26.0",
+    "@types/pdfkit": "^0.17.5",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "pdfkit": "^0.17.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -41,11 +46,13 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.2.3",
+    "@vitest/ui": "^4.0.18",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vite-plugin-singlefile": "^2.3.0"
+    "vite-plugin-singlefile": "^2.3.0",
+    "vitest": "^4.0.18"
   }
 }
