@@ -55,6 +55,69 @@ After creating from template:
    ./scripts/start-app.sh <app-id>
    ```
 
+## Security Configuration (CSP and Domain)
+
+**Required for ChatGPT app submission** - the template includes default CSP configuration.
+
+### What is CSP?
+
+Content Security Policy (CSP) controls which external resources your widget can access. It's a security feature required by ChatGPT.
+
+### Default Configuration (Self-Contained App)
+
+Most MCP apps don't need external resources - everything is bundled by Vite:
+
+```typescript
+_meta: {
+  ui: {
+    domain: "{{APP_ID}}-app",  // Your unique domain identifier
+    csp: {
+      connectDomains: [],       // No external API calls
+      resourceDomains: [],      // No external assets
+    }
+  }
+}
+```
+
+**This default is already configured in the template** and works for most apps.
+
+### When to Modify CSP
+
+Only modify if your app needs external resources:
+
+**External API calls:**
+```typescript
+csp: {
+  connectDomains: ["https://api.weather.com"],  // Add API domains here
+  resourceDomains: [],
+}
+```
+
+**External assets (images, fonts, scripts):**
+```typescript
+csp: {
+  connectDomains: [],
+  resourceDomains: ["https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+}
+```
+
+### Testing CSP
+
+1. Build your app: `npm run build:<app-id>`
+2. Test in ChatGPT Developer Mode
+3. Open browser DevTools → Console
+4. Look for CSP violation errors
+5. Add blocked domains to your CSP configuration
+6. Rebuild and retest
+
+### Important Notes
+
+- **Domain is NOT a real DNS domain** - it's just a string identifier
+- **Claude Desktop ignores CSP** - this only applies to ChatGPT
+- **Start with empty arrays** - add domains only as needed
+- **HTTPS only** - all domains must use HTTPS
+- **Avoid iframes** - they're discouraged and subject to review
+
 ## File Structure
 
 ```

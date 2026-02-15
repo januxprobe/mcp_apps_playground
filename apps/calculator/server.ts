@@ -241,6 +241,15 @@ export function createServer(): McpServer {
             uri: resourceUri,
             mimeType: RESOURCE_MIME_TYPE,
             text: html,
+            _meta: {
+              ui: {
+                domain: "calculator-mcp-app",
+                csp: {
+                  connectDomains: [],
+                  resourceDomains: [],
+                },
+              },
+            },
           },
         ],
       };

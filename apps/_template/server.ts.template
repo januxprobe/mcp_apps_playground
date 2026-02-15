@@ -142,6 +142,29 @@ export function createServer(): McpServer {
             uri: resourceUri,
             mimeType: RESOURCE_MIME_TYPE,
             text: html,
+            // REQUIRED: CSP and domain configuration for ChatGPT submission
+            // Note: Claude Desktop (STDIO mode) ignores these settings
+            _meta: {
+              ui: {
+                // Unique domain identifier (not a real DNS domain, just a string)
+                // ChatGPT uses this for sandboxing: {domain}.web-sandbox.oaiusercontent.com
+                domain: "{{APP_ID}}-app",
+
+                // Content Security Policy: controls which external resources your widget can access
+                csp: {
+                  // Most apps are self-contained and don't need external resources (empty arrays)
+                  connectDomains: [],    // Add domains for fetch/XHR/WebSocket (e.g., ["https://api.example.com"])
+                  resourceDomains: [],   // Add domains for images/fonts/scripts (e.g., ["https://cdn.jsdelivr.net"])
+                  // frameDomains: [],   // Uncomment only if using iframes (discouraged, subject to review)
+                },
+
+                // Example with external resources (uncomment and modify if needed):
+                // csp: {
+                //   connectDomains: ["https://api.example.com"],
+                //   resourceDomains: ["https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+                // }
+              },
+            },
           },
         ],
       };

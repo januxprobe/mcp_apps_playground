@@ -456,12 +456,23 @@ registerAppResource(
       contents: [{
         uri: resourceUri,
         mimeType: RESOURCE_MIME_TYPE,
-        text: html
+        text: html,
+        _meta: {
+          ui: {
+            domain: "my-app",        // Required for ChatGPT submission
+            csp: {                   // Required for ChatGPT submission
+              connectDomains: [],    // External API domains
+              resourceDomains: [],   // External asset domains
+            }
+          }
+        }
       }]
     };
   }
 );
 ```
+
+**Note:** CSP (Content Security Policy) and domain configuration are required for ChatGPT app submission. See the Security Configuration section below for details.
 
 ### Standalone Entry Point Pattern
 Every app has a `standalone.ts` that supports both HTTP and STDIO:
@@ -482,6 +493,231 @@ main().catch((e) => {
   process.exit(1);
 });
 ```
+
+## Security Configuration (CSP and Domain)
+
+### Overview
+
+All MCP apps **MUST** configure Content Security Policy (CSP) and domain settings for ChatGPT app submission. These settings define which external resources your widget can access and provide a unique identifier for sandboxing.
+
+**Important:** Claude Desktop (STDIO mode) ignores these settings - they only apply to ChatGPT's sandboxed widget environment.
+
+### Requirements for ChatGPT Submission
+
+1. **Domain**: Unique identifier for app sandboxing
+2. **CSP**: Content Security Policy for external resource access
+
+ChatGPT will show warnings if these are not configured:
+- "Widget CSP is not set for this template"
+- "Widget domain is not set for this template"
+
+### Domain Configuration
+
+**What it is:**
+- A unique string identifier (NOT a real DNS domain you need to own)
+- Used by ChatGPT to create sandboxed subdomain: `{domain}.web-sandbox.oaiusercontent.com`
+- Must be unique across all your apps
+
+**Naming convention:**
+- Format: `{app-id}-app` or `{app-id}-mcp-app`
+- Use kebab-case (lowercase with hyphens)
+- No special characters or spaces
+
+**Examples:**
+```typescript
+domain: "echo-mcp-app"       // ✅ Good
+domain: "calculator-app"     // ✅ Good
+domain: "hospi-copilot"      // ✅ Good
+domain: "my-weather-widget"  // ✅ Good
+
+domain: "My App"             // ❌ Bad (spaces)
+domain: "app_123"            // ❌ Bad (underscores)
+```
+
+### CSP Configuration
+
+**Three domain types:**
+
+1. **connectDomains**: Hosts for network requests (fetch, XMLHttpRequest, WebSocket)
+2. **resourceDomains**: Hosts for static assets (images, fonts, scripts, stylesheets)
+3. **frameDomains**: Hosts for embedded iframes (discouraged, avoid if possible)
+
+**All domains must use HTTPS.** No HTTP or wildcard domains allowed.
+
+### Self-Contained Apps (Most Common)
+
+Most MCP apps don't need external resources - everything is bundled by Vite:
+
+```typescript
+_meta: {
+  ui: {
+    domain: "my-app",
+    csp: {
+      connectDomains: [],    // No external API calls
+      resourceDomains: [],   // No external assets
+    }
+  }
+}
+```
+
+**This is the default for:**
+- echo app
+- calculator app
+- hospi-copilot app
+
+### Apps with External Dependencies
+
+Only add domains if your widget actually needs them:
+
+**External API calls:**
+```typescript
+_meta: {
+  ui: {
+    domain: "weather-app",
+    csp: {
+      connectDomains: ["https://api.weather.com"],  // API requests
+      resourceDomains: [],
+    }
+  }
+}
+```
+
+**External assets (CDN, fonts, images):**
+```typescript
+_meta: {
+  ui: {
+    domain: "my-app",
+    csp: {
+      connectDomains: [],
+      resourceDomains: [
+        "https://cdn.jsdelivr.net",
+        "https://fonts.googleapis.com"
+      ],
+    }
+  }
+}
+```
+
+**Both API and assets:**
+```typescript
+_meta: {
+  ui: {
+    domain: "full-app",
+    csp: {
+      connectDomains: ["https://api.example.com"],
+      resourceDomains: ["https://cdn.jsdelivr.net"],
+    }
+  }
+}
+```
+
+### Complete Implementation Pattern
+
+```typescript
+import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
+
+registerAppResource(
+  server,
+  "widget-id",
+  resourceUri,
+  { mimeType: RESOURCE_MIME_TYPE },
+  async () => {
+    const html = await fs.readFile(htmlPath, "utf-8");
+    return {
+      contents: [{
+        uri: resourceUri,
+        mimeType: RESOURCE_MIME_TYPE,
+        text: html,
+        _meta: {
+          ui: {
+            domain: "my-app-unique-id",
+            csp: {
+              connectDomains: [],
+              resourceDomains: [],
+            }
+          }
+        }
+      }]
+    };
+  }
+);
+```
+
+### Testing CSP Configuration
+
+**1. Build your app:**
+```bash
+npm run build:<app-id>
+```
+
+**2. Start with ngrok:**
+```bash
+./scripts/start-app.sh <app-id>
+```
+
+**3. Test in ChatGPT:**
+- Configure connector with ngrok URL
+- Use your app's tool
+- Verify widget renders
+
+**4. Check browser console:**
+- Open DevTools → Console
+- Look for CSP violation errors like:
+  - `Refused to connect to 'https://api.example.com' because it violates CSP`
+  - `Refused to load the image 'https://cdn.example.com/...' because it violates CSP`
+- Add blocked domains to your CSP configuration
+
+**5. Verify submission readiness:**
+- No "Widget CSP is not set" warning
+- No "Widget domain is not set" warning
+- No CSP violations in console
+
+### Common CSP Violations and Fixes
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `Refused to connect to 'https://api.example.com'` | External fetch/XHR blocked | Add to `connectDomains` |
+| `Refused to load the image 'https://cdn.example.com/...'` | External image blocked | Add to `resourceDomains` |
+| `Refused to load the font 'https://fonts.googleapis.com/...'` | External font blocked | Add to `resourceDomains` |
+| `Refused to load the script 'https://cdn.jsdelivr.net/...'` | External script blocked | Add to `resourceDomains` |
+
+### Best Practices
+
+1. **Principle of least privilege**: Only allow domains you actually use
+2. **Start with empty arrays**: Add domains only when CSP violations occur
+3. **No wildcards**: Use explicit domain names, not `*.example.com` (not allowed)
+4. **HTTPS only**: All domains must use HTTPS (HTTP is blocked)
+5. **Self-contained preferred**: Bundle resources with Vite to avoid external dependencies
+6. **Avoid iframes**: Use alternative patterns when possible (iframes subject to higher review scrutiny)
+7. **Test thoroughly**: Check browser console for violations before submission
+
+### Infrastructure Helper (Optional)
+
+For consistent CSP configuration across apps, use the infrastructure helper:
+
+```typescript
+import { createResourceMeta, SELF_CONTAINED_CSP } from "../../infrastructure/server/csp.js";
+
+// Self-contained app (default)
+const metadata = createResourceMeta("my-app");
+
+// App with external resources
+const metadata = createResourceMeta("weather-app", {
+  connectDomains: ["https://api.weather.com"],
+  resourceDomains: ["https://cdn.jsdelivr.net"],
+});
+
+// Use in resource registration
+_meta: metadata
+```
+
+### Current App Domains
+
+| App | Domain | CSP Type |
+|-----|--------|----------|
+| echo | `echo-mcp-app` | Self-contained |
+| calculator | `calculator-mcp-app` | Self-contained |
+| hospi-copilot | `hospi-copilot` | Self-contained |
 
 ## Important Conventions
 
@@ -564,6 +800,15 @@ main().catch((e) => {
 - ✅ All app tools available
 - ✅ No tool name conflicts
 - ✅ Both widgets render correctly
+
+### Security Testing (CSP and Domain)
+- ✅ CSP configured for all apps
+- ✅ Domain is unique and follows naming convention
+- ✅ No CSP violations in browser console
+- ✅ Widget renders correctly with CSP enforced
+- ✅ No "Widget CSP is not set" warning in ChatGPT
+- ✅ No "Widget domain is not set" warning in ChatGPT
+- ✅ All external resources are properly allowlisted in CSP
 
 ## Common Issues
 
