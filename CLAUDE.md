@@ -10,6 +10,28 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture.
 - 📄 **PDF Generator** - Server-side PDF generation with pdfkit, PDF.js canvas rendering, multi-page navigation, downloadable output
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 
+## 🚀 Pending Infrastructure Transformation Plan
+
+**IMPORTANT:** At the start of each new session, ask the user:
+
+> "I see there's a pending infrastructure transformation plan to make this playground production-ready. Would you like to:
+> 1. **Execute the plan** - Start implementing the 6-phase transformation
+> 2. **Review the plan** - Read through it first
+> 3. **Defer** - Work on something else today
+>
+> The plan is located at: `docs/INFRASTRUCTURE_TRANSFORMATION_PLAN.md`"
+
+**Plan Summary:**
+Transform this learning playground into a production-ready infrastructure monorepo where:
+- Infrastructure is published as `@mcp-apps/infrastructure` npm package
+- External projects can consume it via `npm install`
+- Systematic process exists to detect and extract reusable patterns
+- Claude skills assist with infrastructure management
+
+**Timeline:** 6 weeks, 6 phases (can be done incrementally)
+
+See full plan: [`docs/INFRASTRUCTURE_TRANSFORMATION_PLAN.md`](../docs/INFRASTRUCTURE_TRANSFORMATION_PLAN.md)
+
 ## Multi-App Architecture
 
 ### Core Principle
