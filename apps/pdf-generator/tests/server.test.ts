@@ -6,12 +6,12 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { generatePDF } from '../../infrastructure/server/utils/pdf-utils.js';
+import { generatePDF } from '../../../infrastructure/server/utils/pdf-utils.js';
 
 describe('PDF Generator App', () => {
   describe('Server Module', () => {
     it('should export required constants', async () => {
-      const module = await import('../../apps/pdf-generator/server.js');
+      const module = await import('../server.js');
 
       expect(module.APP_NAME).toBe('PDF Generator');
       expect(module.APP_VERSION).toBe('1.0.0');
@@ -20,7 +20,7 @@ describe('PDF Generator App', () => {
     });
 
     it('should create a valid MCP server', async () => {
-      const { createServer } = await import('../../apps/pdf-generator/server.js');
+      const { createServer } = await import('../server.js');
       const server = createServer();
 
       expect(server).toBeDefined();

@@ -3,7 +3,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     // Test file patterns
-    include: ['tests/unit/**/*.test.ts'],
+    include: [
+      'tests/**/*.test.ts',           // Central tests (integration, shared utils)
+      'apps/**/tests/**/*.test.ts',   // App-specific tests (co-located)
+    ],
 
     // Environment
     environment: 'node',

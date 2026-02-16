@@ -1,42 +1,78 @@
 # Tests
 
-This directory contains all tests for the MCP Apps Playground.
+This directory contains **integration tests** and **shared test utilities** for the MCP Apps Playground.
 
-## Structure
+## Test Organization
+
+**Co-Located Tests (Primary):**
+App-specific tests are located alongside the app code:
+
+```
+apps/
+├── pdf-generator/
+│   └── tests/                      # PDF generator tests
+│       ├── server.test.ts
+│       ├── pdf-utils.test.ts
+│       └── widget-logic.test.ts
+├── echo/
+│   └── tests/                      # Echo app tests (ready for tests)
+├── calculator/
+│   └── tests/                      # Calculator app tests (ready for tests)
+└── hospi-copilot/
+    └── tests/                      # Hospi-copilot tests (ready for tests)
+```
+
+**Central Tests (This Directory):**
+This directory is reserved for:
+- Integration tests (cross-app testing)
+- Shared test utilities
+- Test fixtures and mock data
+- Test examples and patterns
 
 ```
 tests/
-├── unit/               # Unit tests (with vitest)
-│   └── pdf-utils.test.ts
 ├── examples/           # Learning examples (runnable scripts)
 │   ├── pdf-generation.ts
 │   ├── pdf-base64.ts
 │   └── pdf-utils.ts
-└── fixtures/           # Test data and expected outputs
-    └── (sample data files)
+├── fixtures/           # Test data and expected outputs
+└── integration/        # Cross-app tests (future)
+```
+
+## Running Tests
+
+**All tests:**
+```bash
+npm test                           # Run all tests
+npm run test:watch                 # Watch mode
+npm run test:ui                    # Vitest UI
+npm run test:coverage              # Coverage report
+```
+
+**Per-app tests:**
+```bash
+npm run test:echo                  # Echo app tests only
+npm run test:calculator            # Calculator app tests only
+npm run test:hospi-copilot         # Hospi-copilot tests only
+npm run test:pdf-generator         # PDF generator tests only
 ```
 
 ## Test Types
 
-### Unit Tests (`tests/unit/`)
+### App-Specific Tests
 
-Proper unit tests using vitest framework. These test individual functions and utilities.
+Located in `apps/{app-id}/tests/` - tests for individual apps.
 
-**Run tests:**
-```bash
-npm test                # Run once
-npm run test:watch      # Watch mode (reruns on file changes)
-npm run test:ui         # Interactive UI
-npm run test:coverage   # With coverage report
-```
-
-**Writing unit tests:**
+**Writing app tests:**
 ```typescript
+// apps/myapp/tests/server.test.ts
 import { describe, it, expect } from 'vitest';
 
-describe('My Function', () => {
-  it('should do something', () => {
-    expect(myFunction()).toBe(expected);
+describe('MyApp Server', () => {
+  it('should export required constants', async () => {
+    const module = await import('../server.js');
+    expect(module.APP_NAME).toBeDefined();
+    expect(module.createServer).toBeDefined();
   });
 });
 ```
@@ -134,11 +170,20 @@ describe('My Utility', () => {
 
 ### For New Apps
 
-Create `tests/integration/<app-name>.test.ts`:
+Create `apps/{app-id}/tests/<test-name>.test.ts`:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
-// Test full app workflow
+// Test app-specific functionality
+```
+
+### For Integration Tests
+
+Create `tests/integration/<feature>.test.ts`:
+
+```typescript
+import { describe, it, expect } from 'vitest';
+// Test cross-app scenarios
 ```
 
 ### For Learning Examples
@@ -175,6 +220,15 @@ it('should debug', () => {
 ```bash
 npm test -- --reporter=verbose
 ```
+
+## Benefits of Co-Located Tests
+
+✅ **Proximity:** Tests are next to the code they test
+✅ **Discoverability:** Easy to find tests for a specific app
+✅ **Isolation:** Can run tests for a single app independently
+✅ **Consistency:** Matches app isolation architecture and docs structure
+✅ **Self-Contained:** Each app has its code, tests, docs, and widget together
+✅ **Scalability:** Adding new apps automatically adds test directories
 
 ## CI/CD Integration
 

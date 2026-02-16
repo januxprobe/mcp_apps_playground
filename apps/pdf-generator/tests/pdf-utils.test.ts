@@ -11,7 +11,7 @@ import {
   isValidPDF,
   formatFileSize,
   estimatePageCount,
-} from '../../infrastructure/server/utils/pdf-utils.js';
+} from '../../../infrastructure/server/utils/pdf-utils.js';
 
 describe('PDF Utils', () => {
   describe('generatePDF', () => {
