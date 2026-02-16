@@ -29,7 +29,10 @@
     "inspector:pdf-generator": "npx @modelcontextprotocol/inspector tsx apps/pdf-generator/standalone.ts -- --stdio",
     "build:file-processor": "tsc -p tsconfig.app.json && cross-env APP=file-processor vite build --config vite.app.config.ts",
     "start:file-processor": "concurrently 'cross-env APP=file-processor NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/file-processor/standalone.ts'",
-    "inspector:file-processor": "npx @modelcontextprotocol/inspector tsx apps/file-processor/standalone.ts -- --stdio"
+    "inspector:file-processor": "npx @modelcontextprotocol/inspector tsx apps/file-processor/standalone.ts -- --stdio",
+    "build:dashboard": "tsc -p tsconfig.app.json && cross-env APP=dashboard vite build --config vite.app.config.ts",
+    "start:dashboard": "tsx apps/dashboard/standalone.ts",
+    "inspector:dashboard": "npx @modelcontextprotocol/inspector tsx apps/dashboard/standalone.ts"
   },
   "repository": {
     "type": "git",
