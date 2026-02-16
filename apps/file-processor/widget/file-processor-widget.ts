@@ -27,9 +27,15 @@ const processBtn = document.getElementById('process-btn') as HTMLButtonElement;
 const loading = document.getElementById('loading')!;
 const resultDiv = document.getElementById('result')!;
 
-// State
-let currentFile: File | null = null;
-let currentBase64: string | null = null;
+// State - flexible format that works for both widget uploads and LLM-processed files
+interface FileState {
+  filename: string;
+  mimeType: string;
+  base64Content: string;
+  sizeBytes: number;
+}
+
+let currentFileState: FileState | null = null;
 
 /**
  * Convert File to base64 string
@@ -62,11 +68,9 @@ function formatFileSize(bytes: number): string {
 }
 
 /**
- * Handle file selection
+ * Handle file selection from widget
  */
 async function handleFileSelect(file: File) {
-  currentFile = file;
-
   // Show file info
   selectedFilename.textContent = file.name;
   selectedSize.textContent = formatFileSize(file.size);
@@ -74,7 +78,15 @@ async function handleFileSelect(file: File) {
 
   // Convert to base64
   try {
-    currentBase64 = await fileToBase64(file);
+    const base64Content = await fileToBase64(file);
+
+    // Store in state
+    currentFileState = {
+      filename: file.name,
+      mimeType: file.type || 'application/octet-stream',
+      base64Content,
+      sizeBytes: file.size,
+    };
 
     // Show file selected section
     fileSelected.classList.remove('hidden');
@@ -182,7 +194,7 @@ function escapeHtml(text: string): string {
  * Process the selected file
  */
 async function processFile() {
-  if (!currentFile || !currentBase64) {
+  if (!currentFileState) {
     showError('No file selected');
     return;
   }
@@ -195,15 +207,15 @@ async function processFile() {
   processBtn.disabled = true;
 
   try {
-    console.log('Processing file:', currentFile.name, 'operation:', operation);
+    console.log('Processing file:', currentFileState.filename, 'operation:', operation);
 
     // Call server tool
     const result = await app.callServerTool({
       name: 'process_file',
       arguments: {
-        filename: currentFile.name,
-        mimeType: currentFile.type || 'application/octet-stream',
-        base64Content: currentBase64,
+        filename: currentFileState.filename,
+        mimeType: currentFileState.mimeType,
+        base64Content: currentFileState.base64Content,
         operation,
       },
     });
@@ -227,7 +239,7 @@ async function processFile() {
   }
 }
 
-// Handle tool result from server
+// Handle tool result from server (called when LLM triggers the tool)
 app.ontoolresult = (result) => {
   console.log('Received tool result:', result);
 
@@ -236,6 +248,44 @@ app.ontoolresult = (result) => {
 
   if (result.structuredContent) {
     displayResult(result.structuredContent);
+
+    // Store file data from LLM-processed file for subsequent operations
+    if (result.structuredContent.fileData) {
+      const fileData = result.structuredContent.fileData as FileState;
+
+      currentFileState = {
+        filename: fileData.filename,
+        mimeType: fileData.mimeType,
+        base64Content: fileData.base64Content,
+        sizeBytes: fileData.sizeBytes,
+      };
+
+      // Display file info
+      selectedFilename.textContent = fileData.filename;
+      selectedSize.textContent = formatFileSize(fileData.sizeBytes);
+      selectedType.textContent = fileData.mimeType;
+
+      console.log('File data stored from LLM call:', fileData.filename);
+    }
+
+    // Show the action controls (operation selector + process button)
+    fileSelected.classList.remove('hidden');
+
+    // Add simple message pointing to existing controls
+    const helpMessage = document.createElement('div');
+    helpMessage.style.marginTop = '15px';
+    helpMessage.style.padding = '12px';
+    helpMessage.style.background = '#e3f2fd';
+    helpMessage.style.borderRadius = '6px';
+    helpMessage.style.color = '#1976d2';
+    helpMessage.style.fontSize = '14px';
+    helpMessage.innerHTML = `
+      <strong>💡 Try different operations:</strong> Select a different operation above and click "Process File".
+    `;
+    resultDiv.appendChild(helpMessage);
+
+    // Make sure upload section is visible
+    uploadArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } else {
     showError('Invalid response from server');
   }

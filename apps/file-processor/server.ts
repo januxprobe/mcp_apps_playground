@@ -196,6 +196,13 @@ export function createServer(): McpServer {
             filename,
             result,
             uploadedAt: file.metadata?.uploadedAt,
+            // Include file data so widget can perform subsequent operations
+            fileData: {
+              filename,
+              mimeType,
+              base64Content,
+              sizeBytes: file.sizeBytes,
+            },
           },
           content: [{
             type: "text",
