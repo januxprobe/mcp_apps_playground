@@ -11,6 +11,7 @@ This is a learning playground that demonstrates the MCP (Model Context Protocol)
 - 🧮 **Calculator App** - Arithmetic operations: add, subtract, multiply, divide (blue/green gradient UI)
 - 🏥 **Hospi-Copilot** - Production-ready multilingual (EN/NL/FR) hospitalization journey with dropdowns, date picker, insurance data, validation (healthcare UI)
 - 📄 **PDF Generator** - Server-side PDF generation with multiple templates, canvas rendering, and downloadable output (purple gradient UI)
+- 📁 **File Processor** - Secure file upload with validation, magic number verification, and analysis (purple gradient UI)
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 - 🌐 **Dual-Platform** - Same apps work on ChatGPT and Claude Desktop
 - ✅ **ChatGPT Ready** - All apps include CSP and domain configuration for app submission
@@ -309,6 +310,49 @@ Generate professional PDF documents from templates with server-side rendering an
 
 ---
 
+### 📁 File Processor
+
+Secure file upload and processing with comprehensive validation and analysis.
+
+**Tools:**
+- `process_file` - Validates and processes uploaded files
+
+**Features:**
+- **Secure file validation** - MIME type and magic number verification
+- **Multiple file format support** - Images (PNG, JPEG, GIF), PDFs, text files, CSV, JSON
+- **Magic number detection** - 15+ file signature patterns to prevent file type spoofing
+- **Drag-and-drop upload** - Modern HTML5 File API with drag events
+- **Three processing operations**:
+  - **Analyze** - Full file analysis with type-specific insights
+  - **Validate** - Security checks only
+  - **Metadata** - Extract file info, size, checksum
+- **SHA-256 checksums** - Content integrity verification
+- **Filename sanitization** - Path traversal prevention, unsafe character removal
+- **File size limits** - Configurable max size (10MB default)
+- **Base64 transmission** - Secure file content delivery
+- **Real-time feedback** - Loading states, error messages, success indicators
+
+**Security measures:**
+- ✅ MIME type validation against whitelist
+- ✅ Magic number verification (actual file signature)
+- ✅ File size limit enforcement
+- ✅ Filename sanitization (no path traversal, null bytes)
+- ✅ Content integrity via SHA-256
+- ✅ No server-side file storage
+
+**Start:** `./scripts/start-app.sh file-processor`
+
+**Example prompts:**
+- "Process this image file" (then upload via drag-and-drop)
+- "Validate my PDF document" (select from file picker)
+- "Analyze this text file and show me the metadata"
+
+**Documentation:** See `apps/file-processor/docs/file-upload-patterns.md` for comprehensive implementation guide.
+
+**Note:** Currently works in ChatGPT. Claude Desktop support under investigation (see `apps/file-processor/docs/KNOWN_ISSUES.md`).
+
+---
+
 ## 🛠️ Creating Your Own App
 
 ### Quick Method (5 minutes)
@@ -370,6 +414,16 @@ mcp-apps-playground/
 │   │   └── widget/
 │   │       ├── pdf-generator-widget.html
 │   │       └── pdf-generator-widget.ts
+│   ├── file-processor/
+│   │   ├── server.ts              # File upload/processing MCP server
+│   │   ├── standalone.ts
+│   │   ├── docs/                  # File processor-specific docs
+│   │   │   └── file-upload-patterns.md  # Complete file upload guide
+│   │   ├── tests/                 # File handling tests
+│   │   │   └── file-handling.test.ts
+│   │   └── widget/
+│   │       ├── file-processor-widget.html
+│   │       └── file-processor-widget.ts
 │   └── _template/                 # Template for new apps
 │       ├── README.md
 │       ├── server.ts.template
@@ -379,7 +433,9 @@ mcp-apps-playground/
 │   └── server/
 │       ├── main.ts                # Generic HTTP/STDIO server
 │       ├── types.ts               # TypeScript interfaces
-│       └── i18n.ts                # Internationalization utilities
+│       ├── i18n.ts                # Internationalization utilities
+│       └── utils/
+│           └── file-handling.ts   # File upload & validation utilities
 ├── scripts/
 │   ├── start-app.sh               # Start any app
 │   ├── new-app.sh                 # Create new app
@@ -408,6 +464,7 @@ npm run build:echo               # Build echo app only
 npm run build:calculator         # Build calculator app only
 npm run build:hospi-copilot      # Build hospi-copilot app only
 npm run build:pdf-generator      # Build pdf-generator app only
+npm run build:file-processor     # Build file-processor app only
 npm run build:infrastructure     # Build infrastructure only
 ```
 
@@ -418,6 +475,7 @@ npm run start:echo               # Echo app dev mode
 npm run start:calculator         # Calculator app dev mode
 npm run start:hospi-copilot      # Hospi-copilot app dev mode
 npm run start:pdf-generator      # PDF generator app dev mode
+npm run start:file-processor     # File processor app dev mode
 ```
 
 ### Testing with MCP Inspector
@@ -427,6 +485,7 @@ npm run inspector:echo           # Test echo with MCP Inspector
 npm run inspector:calculator     # Test calculator with MCP Inspector
 npm run inspector:hospi-copilot  # Test hospi-copilot with MCP Inspector
 npm run inspector:pdf-generator  # Test pdf-generator with MCP Inspector
+npm run inspector:file-processor # Test file-processor with MCP Inspector
 ```
 
 ⚠️ **Note:** MCP Inspector has limited support for MCP Apps with UI components. For full testing, use ChatGPT via ngrok.
@@ -519,6 +578,7 @@ _meta: {
 - ✅ **calculator** - Domain: `calculator-mcp-app`, Self-contained CSP
 - ✅ **hospi-copilot** - Domain: `hospi-copilot`, Self-contained CSP
 - ✅ **pdf-generator** - Domain: `pdf-generator`, CDN CSP for PDF.js worker
+- ✅ **file-processor** - Domain: `file-processor`, Self-contained CSP
 - ✅ **Tested & Verified** - No CSP warnings in ChatGPT
 
 All apps use self-contained CSP (empty arrays) because assets are bundled by Vite. See `CLAUDE.md` for detailed CSP documentation.

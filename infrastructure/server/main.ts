@@ -1,9 +1,8 @@
-import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import cors from "cors";
-import type { Request, Response } from "express";
+import express, { type Request, type Response } from "express";
 
 /**
  * Starts the MCP server with HTTP transport for remote access (ChatGPT)
@@ -12,10 +11,18 @@ export async function startStreamableHTTPServer(
   createServerFn: () => McpServer
 ): Promise<void> {
   const port = parseInt(process.env.PORT ?? "3001", 10);
-  const app = createMcpExpressApp({ host: "0.0.0.0" });
+
+  // Create plain Express app (not using createMcpExpressApp to control body parser limits)
+  const app = express();
 
   // Enable CORS for ChatGPT access
   app.use(cors());
+
+  // Increase body size limit for file uploads (Base64-encoded files)
+  // 15MB limit allows for ~11MB original files after Base64 encoding (~33% overhead)
+  // IMPORTANT: This must be configured BEFORE any route handlers
+  app.use(express.json({ limit: '15mb' }));
+  app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
   // Health check endpoint for ChatGPT connector validation
   app.get("/", (_req: Request, res: Response) => {

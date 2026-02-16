@@ -12,7 +12,8 @@
     "test:calculator": "vitest run apps/calculator",
     "test:hospi-copilot": "vitest run apps/hospi-copilot",
     "test:pdf-generator": "vitest run apps/pdf-generator",
-    "build": "npm run build:infrastructure && npm run build:echo && npm run build:calculator && npm run build:hospi-copilot && npm run build:pdf-generator",
+    "test:file-processor": "vitest run apps/file-processor",
+    "build": "npm run build:infrastructure && npm run build:echo && npm run build:calculator && npm run build:hospi-copilot && npm run build:pdf-generator && npm run build:file-processor",
     "build:infrastructure": "tsc -p tsconfig.infrastructure.json",
     "build:echo": "tsc -p tsconfig.app.json && cross-env APP=echo vite build --config vite.app.config.ts",
     "build:calculator": "tsc -p tsconfig.app.json && cross-env APP=calculator vite build --config vite.app.config.ts",
@@ -25,7 +26,10 @@
     "inspector:hospi-copilot": "npx @modelcontextprotocol/inspector tsx apps/hospi-copilot/standalone.ts -- --stdio",
     "build:pdf-generator": "tsc -p tsconfig.app.json && cross-env APP=pdf-generator vite build --config vite.app.config.ts",
     "start:pdf-generator": "concurrently 'cross-env APP=pdf-generator NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/pdf-generator/standalone.ts'",
-    "inspector:pdf-generator": "npx @modelcontextprotocol/inspector tsx apps/pdf-generator/standalone.ts -- --stdio"
+    "inspector:pdf-generator": "npx @modelcontextprotocol/inspector tsx apps/pdf-generator/standalone.ts -- --stdio",
+    "build:file-processor": "tsc -p tsconfig.app.json && cross-env APP=file-processor vite build --config vite.app.config.ts",
+    "start:file-processor": "concurrently 'cross-env APP=file-processor NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/file-processor/standalone.ts'",
+    "inspector:file-processor": "npx @modelcontextprotocol/inspector tsx apps/file-processor/standalone.ts -- --stdio"
   },
   "repository": {
     "type": "git",
