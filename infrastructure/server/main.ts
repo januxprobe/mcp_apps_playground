@@ -17,6 +17,17 @@ export async function startStreamableHTTPServer(
   // Enable CORS for ChatGPT access
   app.use(cors());
 
+  // Health check endpoint for ChatGPT connector validation
+  app.get("/", (_req: Request, res: Response) => {
+    res.json({
+      status: "ok",
+      service: "MCP Apps Server",
+      endpoints: {
+        mcp: "/mcp"
+      }
+    });
+  });
+
   // MCP endpoint at /mcp
   app.all("/mcp", async (req: Request, res: Response) => {
     const server = createServerFn();
